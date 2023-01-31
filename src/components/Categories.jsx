@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 
 const categoriesPizza= [
   'Все',
@@ -9,11 +9,9 @@ const categoriesPizza= [
   'Закрытые'
 ]
 
-function Categories() {
-  const [activeCategories, setActiveCategories] = useState(0)
-
+function Categories( {value, onChangeCategories} ) {
   const handlerActiveCategories = (index) => {
-    setActiveCategories(index)
+    onChangeCategories(index)
   }
 
   return (
@@ -23,7 +21,7 @@ function Categories() {
           categoriesPizza.map( (item, ind) => (
             <li
               key={`${item}_${ind}`}
-              className={activeCategories === ind ? 'active': ''}
+              className={value === ind ? 'active': ''}
               onClick={() => handlerActiveCategories(ind)}
             >{item}</li>
           ))
