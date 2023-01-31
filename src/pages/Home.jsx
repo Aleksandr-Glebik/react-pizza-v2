@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import PizzaCartSkeleton from '../components/PizzaCartSkeleton';
 
-function Home() {
+import { SearchContext } from '../App';
+
+function Home( ) {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [activeCategories, setActiveCategories] = useState(0)
@@ -14,13 +16,16 @@ function Home() {
     sortTypeProps: 'rating'
   })
 
+  const { searchValue } = useContext(SearchContext)
+
   useEffect(() => {
     setIsLoading(true);
     const sortByType = activeSortType.sortTypeProps.replace('-', '')
     const order = activeSortType.sortTypeProps.includes('-') ? 'asc' : 'desc'
     const category = activeCategories > 0 ? `category=${activeCategories}` : ''
+    const search = searchValue ? `&search=${searchValue}` : ''
 
-    fetch(`https://63d776045c4274b136f4ac47.mockapi.io/items?${category}&sortBy=${sortByType}&order=${order}`)
+    fetch(`https://63d776045c4274b136f4ac47.mockapi.io/items?${category}&sortBy=${sortByType}&order=${order}${search}`)
       .then((resp) => {
         return resp.json();
       })
@@ -30,7 +35,7 @@ function Home() {
       });
       window.scrollTo(0, 0)
 
-  }, [activeCategories, activeSortType]);
+  }, [activeCategories, activeSortType, searchValue]);
 
   return (
     <div className="container">
