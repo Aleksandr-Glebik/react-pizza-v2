@@ -6,6 +6,7 @@ import PizzaBlock from '../components/PizzaBlock';
 import PizzaCartSkeleton from '../components/PizzaCartSkeleton';
 
 import { SearchContext } from '../App';
+import Paginate from '../components/Paginate';
 
 function Home( ) {
   const [items, setItems] = useState([]);
@@ -15,6 +16,8 @@ function Home( ) {
     name: 'популярности (desc)',
     sortTypeProps: 'rating'
   })
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsLength, setItemsLength] = useState(10)
 
   const { searchValue } = useContext(SearchContext)
 
@@ -25,7 +28,7 @@ function Home( ) {
     const category = activeCategories > 0 ? `category=${activeCategories}` : ''
     const search = searchValue ? `&search=${searchValue}` : ''
 
-    fetch(`https://63d776045c4274b136f4ac47.mockapi.io/items?${category}&sortBy=${sortByType}&order=${order}${search}`)
+    fetch(`https://63d776045c4274b136f4ac47.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortByType}&order=${order}${search}`)
       .then((resp) => {
         return resp.json();
       })
@@ -35,7 +38,15 @@ function Home( ) {
       });
       window.scrollTo(0, 0)
 
-  }, [activeCategories, activeSortType, searchValue]);
+      fetch(`https://63d776045c4274b136f4ac47.mockapi.io/items?${category}&sortBy=${sortByType}&order=${order}${search}`)
+      .then((resp2) => {
+        return resp2.json();
+      })
+      .then((items2) => {
+        setItemsLength(items2.length)
+      });
+
+  }, [activeCategories, activeSortType, searchValue, currentPage]);
 
   return (
     <div className="container">
@@ -49,6 +60,7 @@ function Home( ) {
           ? [...Array(6)].map((_, ind) => <PizzaCartSkeleton key={ind} />)
           : items.map((item, ind) => <PizzaBlock key={`${item}_${ind}`} {...item} />)}
       </div>
+      <Paginate setCurrentPage={setCurrentPage} itemsLength={itemsLength} />
     </div>
   );
 }
