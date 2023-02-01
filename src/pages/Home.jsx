@@ -60,7 +60,7 @@ function Home( ) {
           ? [...Array(6)].map((_, ind) => <PizzaCartSkeleton key={ind} />)
           : items.map((item, ind) => <PizzaBlock key={`${item}_${ind}`} {...item} />)}
       </div>
-      <Paginate setCurrentPage={setCurrentPage} itemsLength={itemsLength} />
+      <Paginate currentPage={currentPage} setCurrentPage={setCurrentPage} itemsLength={itemsLength} />
     </div>
   );
 }
