@@ -1,39 +1,42 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 
-import './index.css'
+import './index.css';
 
-import App from './App'
+import App from './App';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
 import NotFound from './pages/NotFound';
+import { store } from './redux/store';
+import { Provider } from 'react-redux';
 
-import {
-    createBrowserRouter,
-    RouterProvider,
-  } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
-{
-    path: "/",
+  {
+    path: '/',
     element: <App />,
     errorElement: <NotFound />,
     children: [
-        {
-            path: "/",
-            element: <Home />
-        },
-        {
-            path: '/cart',
-            element: <Cart />
-        },
-        {
-            path: "*",
-            element: <NotFound />
-        }
-    ]
-},
+      {
+        path: '/',
+        element: <Home />,
+      },
+      {
+        path: '/cart',
+        element: <Cart />,
+      },
+      {
+        path: '*',
+        element: <NotFound />,
+      },
+    ],
+  },
 ]);
 
-const root = ReactDOM.createRoot(document.getElementById('root'))
-root.render(<RouterProvider router={router} />)
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>,
+);

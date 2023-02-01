@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSortType } from '../redux/slices/filterSlice'
 
 const sortList = [
   {name: 'популярности (desc)', sortTypeProps: 'rating'},
@@ -9,11 +11,14 @@ const sortList = [
   {name: 'алфавиту (asc)', sortTypeProps: '-name'},
 ]
 
-function Sort( { sortType, onChangeSortType } ) {
+function Sort() {
+  const dispatch = useDispatch()
+  const { sort } = useSelector(state => state.filters)
+
   const [isVisible, setIsVisible] = useState(false)
 
-  const handlerActiveItem = (index) => {
-    onChangeSortType(sortList[index])
+  const handlerActiveItem = (obj) => {
+    dispatch(setSortType(obj))
     setIsVisible(false)
   }
 
@@ -35,15 +40,15 @@ function Sort( { sortType, onChangeSortType } ) {
         <b>Сортировка по:</b>
         <span
           onClick={() => setIsVisible(prev => !prev)}
-        >{sortType.name}</span>
+        >{sort.name}</span>
       </div>
       {isVisible && <div className="sort__popup">
         <ul>
           {sortList.map( (item, ind) => (
             <li
               key={`${item.name}_${ind}`}
-              className={item.sortTypeProps === sortType.sortTypeProps ? 'active' : ''}
-              onClick={() => handlerActiveItem(ind)}
+              className={item.sortTypeProps === sort.sortTypeProps ? 'active' : ''}
+              onClick={() => handlerActiveItem(item)}
             >
               {item.name}
             </li>
