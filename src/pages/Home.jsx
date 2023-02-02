@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import Paginate from '../components/Paginate';
+import axios from 'axios';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
@@ -33,23 +34,33 @@ function Home( ) {
     const category = categoryInd > 0 ? `category=${categoryInd}` : ''
     const search = searchValue ? `&search=${searchValue}` : ''
 
-    fetch(`https://63d776045c4274b136f4ac47.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortByType}&order=${order}${search}`)
-      .then((resp) => {
-        return resp.json();
-      })
-      .then((items) => {
-        setItems(items);
-        setIsLoading(false);
-      });
-      window.scrollTo(0, 0)
+    // fetch(`https://63d776045c4274b136f4ac47.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortByType}&order=${order}${search}`)
+    //   .then((resp) => {
+    //     return resp.json();
+    //   })
+    //   .then((items) => {
+    //     setItems(items);
+    //     setIsLoading(false);
+    //   });
+    //   window.scrollTo(0, 0)
 
-      fetch(`https://63d776045c4274b136f4ac47.mockapi.io/items?${category}&sortBy=${sortByType}&order=${order}${search}`)
-      .then((resp2) => {
-        return resp2.json();
+    //   fetch(`https://63d776045c4274b136f4ac47.mockapi.io/items?${category}&sortBy=${sortByType}&order=${order}${search}`)
+    //   .then((resp2) => {
+    //     return resp2.json();
+    //   })
+    //   .then((items2) => {
+    //     setItemsLength(items2.length)
+    //   });
+
+    axios.get(`https://63d776045c4274b136f4ac47.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortByType}&order=${order}${search}`)
+      .then(resp => {
+        setItems(resp.data);
+        setIsLoading(false)
       })
-      .then((items2) => {
-        setItemsLength(items2.length)
-      });
+    window.scrollTo(0, 0)
+
+    axios.get(`https://63d776045c4274b136f4ac47.mockapi.io/items?${category}&sortBy=${sortByType}&order=${order}${search}`)
+      .then(resp2 => setItemsLength(resp2.data.length))
 
   }, [categoryInd, searchValue, currentPage, sort]);
 
