@@ -1,50 +1,92 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useEffect, useState, useContext, useRef, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Paginate from '../components/Paginate';
 import axios from 'axios';
+import qs from 'qs';
+import { useNavigate } from 'react-router-dom';
 
 import Categories from '../components/Categories';
-import Sort from '../components/Sort';
+import Sort, { sortList } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import PizzaCartSkeleton from '../components/PizzaCartSkeleton';
 
 import { SearchContext } from '../App';
-import { setCategoryInd } from '../redux/slices/filterSlice';
+import { setCategoryInd, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 
-
-function Home( ) {
-  const { categoryInd, sort } = useSelector(state => state.filters)
-  const dispatch = useDispatch()
-
-  const onChangeCategory = (index) => {
-    dispatch(setCategoryInd(index))
-  }
+function Home() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { categoryInd, sort, currentPage } = useSelector((state) => state.filters);
+  const isSearch = useRef(false);
+  const isMounted = useRef(false);
 
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1)
-  const [itemsLength, setItemsLength] = useState(10)
+  const { searchValue } = useContext(SearchContext);
 
-  const { searchValue } = useContext(SearchContext)
+  const onChangeCategory = (index) => {
+    dispatch(setCategoryInd(index));
+  };
+
+  const onChangePage = (number) => {
+    dispatch(setCurrentPage(number));
+  };
+
+  const fetchPizzas = useCallback(() => {
+    setIsLoading(true);
+    const sortByType = sort.sortTypeProps.replace('-', '');
+    const order = sort.sortTypeProps.includes('-') ? 'asc' : 'desc';
+    const category = categoryInd > 0 ? `category=${categoryInd}` : '';
+    const search = searchValue ? `&search=${searchValue}` : '';
+
+    axios
+      .get(
+        `https://63d776045c4274b136f4ac47.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortByType}&order=${order}${search}`,
+      )
+      .then((resp) => {
+        setItems(resp.data);
+        setIsLoading(false);
+      });
+  }, [categoryInd, searchValue, currentPage, sort.sortTypeProps])
 
   useEffect(() => {
-    setIsLoading(true);
-    const sortByType = sort.sortTypeProps.replace('-', '')
-    const order = sort.sortTypeProps.includes('-') ? 'asc' : 'desc'
-    const category = categoryInd > 0 ? `category=${categoryInd}` : ''
-    const search = searchValue ? `&search=${searchValue}` : ''
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        sortTypeProps: sort.sortTypeProps,
+        categoryInd,
+        currentPage,
+      });
 
-    axios.get(`https://63d776045c4274b136f4ac47.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortByType}&order=${order}${search}`)
-      .then(resp => {
-        setItems(resp.data);
-        setIsLoading(false)
-      })
-    window.scrollTo(0, 0)
+      navigate(`?${queryString}`);
+    }
+    isMounted.current = true
+  }, [categoryInd, currentPage, sort.sortTypeProps, navigate]);
 
-    axios.get(`https://63d776045c4274b136f4ac47.mockapi.io/items?${category}&sortBy=${sortByType}&order=${order}${search}`)
-      .then(resp2 => setItemsLength(resp2.data.length))
+  useEffect(() => {
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.slice(1));
+      const sort = sortList.find((obj) => obj.sortTypeProps === params.sortTypeProps);
 
-  }, [categoryInd, searchValue, currentPage, sort]);
+      dispatch(
+        setFilters({
+          ...params,
+          sort,
+        }),
+      );
+      isSearch.current = true;
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+
+    if (!isSearch.current) {
+      fetchPizzas();
+    }
+    isSearch.current = false;
+  }, [fetchPizzas]);
+
+
 
   return (
     <div className="container">
@@ -58,7 +100,7 @@ function Home( ) {
           ? [...Array(6)].map((_, ind) => <PizzaCartSkeleton key={ind} />)
           : items.map((item, ind) => <PizzaBlock key={`${item}_${ind}`} {...item} />)}
       </div>
-      <Paginate currentPage={currentPage} setCurrentPage={setCurrentPage} itemsLength={itemsLength} />
+      <Paginate currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );
 }
