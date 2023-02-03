@@ -32,22 +32,25 @@ function Home() {
     dispatch(setCurrentPage(number));
   };
 
-  const fetchPizzas = useCallback(() => {
+  const fetchPizzas = useCallback(async () => {
     setIsLoading(true);
     const sortByType = sort.sortTypeProps.replace('-', '');
     const order = sort.sortTypeProps.includes('-') ? 'asc' : 'desc';
     const category = categoryInd > 0 ? `category=${categoryInd}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
 
-    axios
-      .get(
+    try {
+      const resp = await axios.get(
         `https://63d776045c4274b136f4ac47.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortByType}&order=${order}${search}`,
-      )
-      .then((resp) => {
-        setItems(resp.data);
-        setIsLoading(false);
-      });
-  }, [categoryInd, searchValue, currentPage, sort.sortTypeProps])
+      );
+      setItems(resp.data);
+    } catch (error) {
+      console.log('error', error.message);
+      alert('Ошибка при получении пицц с сервера')
+    } finally {
+      setIsLoading(false);
+    }
+  }, [categoryInd, searchValue, currentPage, sort.sortTypeProps]);
 
   useEffect(() => {
     if (isMounted.current) {
@@ -59,7 +62,7 @@ function Home() {
 
       navigate(`?${queryString}`);
     }
-    isMounted.current = true
+    isMounted.current = true;
   }, [categoryInd, currentPage, sort.sortTypeProps, navigate]);
 
   useEffect(() => {
@@ -85,8 +88,6 @@ function Home() {
     }
     isSearch.current = false;
   }, [fetchPizzas]);
-
-
 
   return (
     <div className="container">
