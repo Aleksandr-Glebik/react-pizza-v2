@@ -4,13 +4,20 @@ import { Link } from 'react-router-dom';
 import { clearItems } from '../redux/slices/cartSlice'
 
 import CartItem from '../components/CartItem';
+import CartEmpty from '../components/CartEmpty';
 
 function Cart() {
   const dispatch = useDispatch()
   const { totalPrice, totalCountPizzas, items } = useSelector(state => state.cart)
 
   const clearBasket = () => {
-    dispatch(clearItems())
+    if (window.confirm('Вы действительно хотите очистить корзину заказа ?')) {
+      dispatch(clearItems())
+    }
+  }
+
+  if (!items.length) {
+    return <CartEmpty />
   }
 
   return (
@@ -90,13 +97,7 @@ function Cart() {
           {items.map( (item, ind) => (
             <CartItem
               key={`${item.name}_${ind}`}
-              id={item.id}
-              name={item.name}
-              imageUrl={item.imageUrl}
-              type={item.type}
-              size={item.size}
-              price={item.price}
-              count={item.count}
+              {...item}
             />
           ))}
         <div className="cart__bottom">

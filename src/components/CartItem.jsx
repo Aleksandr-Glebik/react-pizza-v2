@@ -1,12 +1,22 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { removeItem } from '../redux/slices/cartSlice'
+import { removeItem, plusItem, minusItem} from '../redux/slices/cartSlice'
 
 function CartItem({ id, name, imageUrl, type, size, price, count }) {
   const dispatch = useDispatch()
 
   const handlerRemoveItem = () => {
-    dispatch(removeItem(id))
+    if (window.confirm('Вы действительно хотите удалить данную пиццу из корзины ?')) {
+      dispatch(removeItem(id))
+    }
+  }
+
+  const handlerPlusItem = () => {
+    dispatch(plusItem(id))
+  }
+
+  const handlerMinusItem = () => {
+    dispatch(minusItem(id))
   }
   return (
     <div className="content__items">
@@ -23,7 +33,10 @@ function CartItem({ id, name, imageUrl, type, size, price, count }) {
           <p>{type}, {size}</p>
         </div>
         <div className="cart__item-count">
-          <div className="button button--outline button--circle cart__item-count-minus">
+          <div
+            className="button button--outline button--circle cart__item-count-minus"
+            onClick={handlerMinusItem}
+          >
             <svg
               width="10"
               height="10"
@@ -41,7 +54,10 @@ function CartItem({ id, name, imageUrl, type, size, price, count }) {
             </svg>
           </div>
           <b>{count}</b>
-          <div className="button button--outline button--circle cart__item-count-plus">
+          <div
+            className="button button--outline button--circle cart__item-count-plus"
+            onClick={handlerPlusItem}
+          >
             <svg
               width="10"
               height="10"
