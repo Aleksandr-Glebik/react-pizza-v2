@@ -17,7 +17,7 @@ function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { categoryInd, sort, currentPage } = useSelector((state) => state.filters);
-  const {items, status} = useSelector(state => state.pizzas)
+  const { items, status } = useSelector((state) => state.pizzas);
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
@@ -37,14 +37,15 @@ function Home() {
     const category = categoryInd > 0 ? `category=${categoryInd}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
 
-    dispatch(fetchPizzasAT({
-      currentPage,
-      category,
-      sortByType,
-      order,
-      search
-    }))
-
+    dispatch(
+      fetchPizzasAT({
+        currentPage,
+        category,
+        sortByType,
+        order,
+        search,
+      }),
+    );
   }, [categoryInd, searchValue, currentPage, sort.sortTypeProps, dispatch]);
 
   useEffect(() => {
@@ -84,6 +85,9 @@ function Home() {
     isSearch.current = false;
   }, [fetchPizzas]);
 
+  const pizzas = items.map((item, ind) => <PizzaBlock key={`${item}_${ind}`} {...item} />);
+  const skeletons = [...Array(6)].map((_, ind) => <PizzaCartSkeleton key={ind} />);
+
   return (
     <div className="container">
       <div className="content__top">
@@ -91,11 +95,14 @@ function Home() {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">
-        {status === 'loading'
-          ? [...Array(6)].map((_, ind) => <PizzaCartSkeleton key={ind} />)
-          : items.map((item, ind) => <PizzaBlock key={`${item}_${ind}`} {...item} />)}
-      </div>
+      {status === 'error' ? (
+        <div className="content__error-info">
+          <h2>Произошла ошибка 😕</h2>
+          <p>К сожалению, не удалось получить питсы. Попробуйте повторить попытку позже.</p>
+        </div>
+      ) : (
+        <div className="content__items">{status === 'loading' ? skeletons : pizzas}</div>
+      )}
       <Paginate currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );
