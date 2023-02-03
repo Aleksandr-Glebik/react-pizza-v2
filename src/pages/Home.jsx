@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Paginate from '../components/Paginate';
@@ -9,7 +9,6 @@ import Sort, { sortList } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import PizzaCartSkeleton from '../components/PizzaCartSkeleton';
 
-import { SearchContext } from '../App';
 import { selectFilters, setCategoryInd, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 import { fetchPizzasAT, selectPizzas } from '../redux/slices/pizzasSlice';
 
@@ -17,13 +16,11 @@ function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { categoryInd, sort, currentPage } = useSelector(selectFilters);
+  const { categoryInd, sort, currentPage, searchValue } = useSelector(selectFilters);
   const { items, status } = useSelector(selectPizzas);
 
   const isSearch = useRef(false);
   const isMounted = useRef(false);
-
-  const { searchValue } = useContext(SearchContext);
 
   const onChangeCategory = (index) => {
     dispatch(setCategoryInd(index));
