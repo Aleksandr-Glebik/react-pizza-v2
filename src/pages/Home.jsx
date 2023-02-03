@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useContext, useRef, useCallback } from 'react';
+import React, { useEffect, useContext, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Paginate from '../components/Paginate';
-import axios from 'axios';
-import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
+import Paginate from '../components/Paginate';
+import qs from 'qs';
 
 import Categories from '../components/Categories';
 import Sort, { sortList } from '../components/Sort';
@@ -12,16 +11,16 @@ import PizzaCartSkeleton from '../components/PizzaCartSkeleton';
 
 import { SearchContext } from '../App';
 import { setCategoryInd, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
+import { fetchPizzasAT } from '../redux/slices/pizzasSlice';
 
 function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { categoryInd, sort, currentPage } = useSelector((state) => state.filters);
+  const {items, status} = useSelector(state => state.pizzas)
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
-  const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const { searchValue } = useContext(SearchContext);
 
   const onChangeCategory = (index) => {
@@ -33,24 +32,20 @@ function Home() {
   };
 
   const fetchPizzas = useCallback(async () => {
-    setIsLoading(true);
     const sortByType = sort.sortTypeProps.replace('-', '');
     const order = sort.sortTypeProps.includes('-') ? 'asc' : 'desc';
     const category = categoryInd > 0 ? `category=${categoryInd}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
 
-    try {
-      const resp = await axios.get(
-        `https://63d776045c4274b136f4ac47.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortByType}&order=${order}${search}`,
-      );
-      setItems(resp.data);
-    } catch (error) {
-      console.log('error', error.message);
-      alert('Ошибка при получении пицц с сервера')
-    } finally {
-      setIsLoading(false);
-    }
-  }, [categoryInd, searchValue, currentPage, sort.sortTypeProps]);
+    dispatch(fetchPizzasAT({
+      currentPage,
+      category,
+      sortByType,
+      order,
+      search
+    }))
+
+  }, [categoryInd, searchValue, currentPage, sort.sortTypeProps, dispatch]);
 
   useEffect(() => {
     if (isMounted.current) {
@@ -97,7 +92,7 @@ function Home() {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
-        {isLoading
+        {status === 'loading'
           ? [...Array(6)].map((_, ind) => <PizzaCartSkeleton key={ind} />)
           : items.map((item, ind) => <PizzaBlock key={`${item}_${ind}`} {...item} />)}
       </div>
