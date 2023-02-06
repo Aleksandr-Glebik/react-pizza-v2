@@ -1,10 +1,18 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { typeNames } from './PizzaBlock';
+import axios from 'axios';
 
-function FullPizza() {
-  const [pizza, setPizza] = useState();
+type PizzaType = {
+  name: string
+  imageUrl: string
+  price: number
+  types: string[]
+  sizes: string[]
+}
+
+const FullPizza: React.FC = () => {
+  const [pizza, setPizza] = useState<PizzaType>();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -37,7 +45,7 @@ function FullPizza() {
         <div className="pizza-block__selector">
           <ul>
             {pizza.types.map((item, ind) => (
-              <li key={`${item}_${ind}`}>{typeNames[item]}</li>
+              <li key={`${item}_${ind}`}>{typeNames[+item]}</li>
             ))}
           </ul>
           <ul>
