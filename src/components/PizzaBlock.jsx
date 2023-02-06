@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem, selectCartItemById } from '../redux/slices/cartSlice'
+import { Link } from 'react-router-dom';
+import { addItem, selectCartItemById } from '../redux/slices/cartSlice';
 
-const typeNames = ['тонкое', 'традиционное'];
-const sizesPizzas = ['26 см.', '30 см.', '40 см.']
+export const typeNames = ['тонкое', 'традиционное'];
+const sizesPizzas = ['26 см.', '30 см.', '40 см.'];
 
 function PizzaBlock({ id, name, imageUrl, types, sizes, price, category }) {
-  const dispatch = useDispatch()
-  const cartItem = useSelector(selectCartItemById(id))
-  const addedCount = cartItem ? cartItem.count : 0
+  const dispatch = useDispatch();
+  const cartItem = useSelector(selectCartItemById(id));
+  const addedCount = cartItem ? cartItem.count : 0;
 
   const [activeType, setActiveType] = useState(0);
   const [activeSize, setActiveSize] = useState(0);
@@ -28,16 +29,18 @@ function PizzaBlock({ id, name, imageUrl, types, sizes, price, category }) {
       imageUrl,
       type: typeNames[activeType],
       size: sizesPizzas[activeSize],
-      price
-    }
-    dispatch(addItem(item))
-  }
+      price,
+    };
+    dispatch(addItem(item));
+  };
 
   return (
     <div className="pizza-block-wrapper">
       <div className="pizza-block">
-        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
-        <h4 className="pizza-block__title">{name}</h4>
+        <Link to={`/pizza/${id}`}>
+          <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
+          <h4 className="pizza-block__title">{name}</h4>
+        </Link>
         <div className="pizza-block__selector">
           <ul>
             {types.map((item, ind) => (
@@ -62,10 +65,7 @@ function PizzaBlock({ id, name, imageUrl, types, sizes, price, category }) {
         </div>
         <div className="pizza-block__bottom">
           <div className="pizza-block__price">от {price} ₽</div>
-          <div
-            className="button button--outline button--add"
-            onClick={onClickAddItem}
-          >
+          <div className="button button--outline button--add" onClick={onClickAddItem}>
             <svg
               width="12"
               height="12"

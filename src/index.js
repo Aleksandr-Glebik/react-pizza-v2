@@ -11,6 +11,7 @@ import { store } from './redux/store';
 import { Provider } from 'react-redux';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import FullPizza from './components/FullPizza';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: '/cart',
         element: <Cart />,
+      },
+      {
+        path: '/pizza/:id',
+        element: <FullPizza />,
       },
       {
         path: '*',
