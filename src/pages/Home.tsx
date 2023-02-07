@@ -11,8 +11,8 @@ import PizzaCartSkeleton from '../components/PizzaCartSkeleton';
 
 import { selectFilters, setCategoryInd, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 import { fetchPizzasAT, selectPizzas } from '../redux/slices/pizzasSlice';
-
-function Home() {
+import { cartItemType } from '../components/CartItem';
+const Home: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -22,11 +22,11 @@ function Home() {
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
-  const onChangeCategory = (index) => {
+  const onChangeCategory = (index: number) => {
     dispatch(setCategoryInd(index));
   };
 
-  const onChangePage = (number) => {
+  const onChangePage = (number: number) => {
     dispatch(setCurrentPage(number));
   };
 
@@ -37,6 +37,7 @@ function Home() {
     const search = searchValue ? `&search=${searchValue}` : '';
 
     dispatch(
+      //@ts-ignore
       fetchPizzasAT({
         currentPage,
         category,
@@ -84,7 +85,7 @@ function Home() {
     isSearch.current = false;
   }, [fetchPizzas]);
 
-  const pizzas = items.map((item, ind) => <PizzaBlock key={`${item}_${ind}`} {...item} />);
+  const pizzas = items.map((item: cartItemType, ind: number) => <PizzaBlock key={`${item}_${ind}`} {...item} />);
   const skeletons = [...Array(6)].map((_, ind) => <PizzaCartSkeleton key={ind} />);
 
   return (

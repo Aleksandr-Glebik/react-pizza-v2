@@ -1,6 +1,13 @@
 import React from 'react'
 
-const categoriesPizza= [
+type categoriesPizzaType = string[]
+
+type CategoriesPropsType = {
+  value: number
+  onChangeCategories: any
+}
+
+const categoriesPizza: categoriesPizzaType = [
   'Все',
   'Мясные',
   'Вегетарианские',
@@ -9,8 +16,8 @@ const categoriesPizza= [
   'Закрытые'
 ]
 
-function Categories( {value, onChangeCategories} ) {
-  const handlerActiveCategories = (index) => {
+const Categories: React.FC<CategoriesPropsType> = ( {value, onChangeCategories} ) => {
+  const handlerActiveCategories = (index: number) => {
     onChangeCategories(index)
   }
 
