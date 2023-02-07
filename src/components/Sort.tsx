@@ -2,9 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectFilters, setSortType } from '../redux/slices/filterSlice'
 
-type SortListType = {
+export enum SortPropertyEnum {
+  RATING_DESC = 'rating',
+  RATING_ASC = '-rating',
+  PRICE_DESC = 'price',
+  PRICE_ASC = '-price',
+  NAME_DESC = 'name',
+  NAME_ASC = '-name'
+}
+
+export type SortListType = {
   name: string
-  sortTypeProps: string
+  sortTypeProps: SortPropertyEnum
 }
 
 type M = MouseEvent & {
@@ -12,12 +21,12 @@ type M = MouseEvent & {
 }
 
 export const sortList: SortListType[] = [
-  {name: 'популярности (desc)', sortTypeProps: 'rating'},
-  {name: 'популярности (asc)', sortTypeProps: '-rating'},
-  {name: 'цене (desc)', sortTypeProps: 'price'},
-  {name: 'цене (asc)', sortTypeProps: '-price'},
-  {name: 'алфавиту (desc)', sortTypeProps: 'name'},
-  {name: 'алфавиту (asc)', sortTypeProps: '-name'},
+  {name: 'популярности (desc)', sortTypeProps: SortPropertyEnum.RATING_DESC},
+  {name: 'популярности (asc)', sortTypeProps: SortPropertyEnum.RATING_ASC},
+  {name: 'цене (desc)', sortTypeProps: SortPropertyEnum.PRICE_DESC},
+  {name: 'цене (asc)', sortTypeProps: SortPropertyEnum.PRICE_ASC},
+  {name: 'алфавиту (desc)', sortTypeProps: SortPropertyEnum.NAME_DESC},
+  {name: 'алфавиту (asc)', sortTypeProps: SortPropertyEnum.NAME_ASC},
 ]
 
 const Sort: React.FC = () => {

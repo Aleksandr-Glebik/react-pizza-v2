@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Paginate from '../components/Paginate';
 import qs from 'qs';
+import { useAppDispatch } from '../redux/store';
 
 import Categories from '../components/Categories';
 import Sort, { sortList } from '../components/Sort';
@@ -10,10 +11,12 @@ import PizzaBlock from '../components/PizzaBlock';
 import PizzaCartSkeleton from '../components/PizzaCartSkeleton';
 
 import { selectFilters, setCategoryInd, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
-import { fetchPizzasAT, selectPizzas } from '../redux/slices/pizzasSlice';
-import { cartItemType } from '../components/CartItem';
+import { FetchPizzaArgsType, fetchPizzasAT, selectPizzas } from '../redux/slices/pizzasSlice';
+
+import { PizzaSliceItemsType } from '../redux/slices/pizzasSlice';
+
 const Home: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const { categoryInd, sort, currentPage, searchValue } = useSelector(selectFilters);
@@ -31,17 +34,16 @@ const Home: React.FC = () => {
   };
 
   const fetchPizzas = useCallback(async () => {
-    const sortByType = sort.sortTypeProps.replace('-', '');
+    const sortBy = sort.sortTypeProps.replace('-', '');
     const order = sort.sortTypeProps.includes('-') ? 'asc' : 'desc';
     const category = categoryInd > 0 ? `category=${categoryInd}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
 
     dispatch(
-      //@ts-ignore
       fetchPizzasAT({
         currentPage,
         category,
-        sortByType,
+        sortBy,
         order,
         search,
       }),
@@ -63,13 +65,15 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (window.location.search) {
-      const params = qs.parse(window.location.search.slice(1));
-      const sort = sortList.find((obj) => obj.sortTypeProps === params.sortTypeProps);
+      const params = (qs.parse(window.location.search.slice(1)) as unknown) as FetchPizzaArgsType;
+      const sort = sortList.find((obj) => obj.sortTypeProps === params.sortBy);
 
       dispatch(
         setFilters({
-          ...params,
-          sort,
+          searchValue: params.search,
+          categoryInd: Number(params.category),
+          currentPage: params.currentPage,
+          sort: sort ? sort : sortList[0],
         }),
       );
       isSearch.current = true;
@@ -85,7 +89,7 @@ const Home: React.FC = () => {
     isSearch.current = false;
   }, [fetchPizzas]);
 
-  const pizzas = items.map((item: cartItemType, ind: number) => <PizzaBlock key={`${item}_${ind}`} {...item} />);
+  const pizzas = items.map((item: PizzaSliceItemsType, ind: number) => <PizzaBlock key={`${item}_${ind}`} {...item} />);
   const skeletons = [...Array(6)].map((_, ind) => <PizzaCartSkeleton key={ind} />);
 
   return (

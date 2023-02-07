@@ -2,17 +2,9 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { removeItem, plusItem, minusItem} from '../redux/slices/cartSlice'
 
-export type cartItemType = {
-  id: string
-  name: string
-  imageUrl: string
-  types: number[]
-  sizes: number[]
-  price: number
-  count: number
-}
+import { CartSliceItemType } from '../redux/slices/cartSlice';
 
-const CartItem: React.FC<cartItemType> = ({ id, name, imageUrl, types, sizes, price, count }) => {
+const CartItem: React.FC<CartSliceItemType> = ({ id, name, imageUrl, type, size, price, count }) => {
   const dispatch = useDispatch()
 
   const handlerRemoveItem = () => {
@@ -40,7 +32,7 @@ const CartItem: React.FC<cartItemType> = ({ id, name, imageUrl, types, sizes, pr
         </div>
         <div className="cart__item-info">
           <h3>{name}</h3>
-          <p>{types}, {sizes}</p>
+          <p>{type}, {size}</p>
         </div>
         <div className="cart__item-count">
           <div

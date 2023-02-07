@@ -6,7 +6,7 @@ import App from './App';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
 import NotFound from './pages/NotFound';
-import { store } from './redux/store';
+import store  from './redux/store';
 import { Provider } from 'react-redux';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';

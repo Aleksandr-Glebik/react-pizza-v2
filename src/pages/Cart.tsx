@@ -6,7 +6,7 @@ import { clearItems, selectCart } from '../redux/slices/cartSlice'
 import CartItem from '../components/CartItem';
 import CartEmpty from '../components/CartEmpty';
 
-import { cartItemType } from '../components/CartItem';
+import { CartSliceItemType } from '../redux/slices/cartSlice';
 
 const Cart: React.FC = () => {
   const dispatch = useDispatch()
@@ -96,7 +96,7 @@ const Cart: React.FC = () => {
             <span>Очистить корзину</span>
           </div>
         </div>
-          {items.map( (item: cartItemType, ind: number) => (
+          {items.map( (item: CartSliceItemType, ind: number) => (
             <CartItem
               key={`${item.name}_${ind}`}
               {...item}
