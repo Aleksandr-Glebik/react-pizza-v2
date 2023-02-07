@@ -23,7 +23,7 @@ const Search: React.FC = () => {
     [ dispatch]
   )
   const onChangeInput = useCallback(
-    (e: any) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       setLocalValue(e.target.value)
       debouncedSearch(e.target.value)
     },

@@ -4,7 +4,7 @@ type categoriesPizzaType = string[]
 
 type CategoriesPropsType = {
   value: number
-  onChangeCategories: any
+  onChangeCategories: (index: number) => void
 }
 
 const categoriesPizza: categoriesPizzaType = [

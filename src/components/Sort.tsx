@@ -7,6 +7,10 @@ type SortListType = {
   sortTypeProps: string
 }
 
+type M = MouseEvent & {
+  path: Node[]
+}
+
 export const sortList: SortListType[] = [
   {name: 'популярности (desc)', sortTypeProps: 'rating'},
   {name: 'популярности (asc)', sortTypeProps: '-rating'},
@@ -29,8 +33,9 @@ const Sort: React.FC = () => {
   }
 
   useEffect( () => {
-    const handleClickOutside = (e: any) => {
-      if (!e.composedPath().includes(sortRef.current)) {
+    const handleClickOutside = (e: MouseEvent) => {
+      const _event = e as M
+      if (sortRef.current && !_event.composedPath().includes(sortRef.current)) {
         setIsVisible(false)
       }
     }
