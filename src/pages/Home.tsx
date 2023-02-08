@@ -9,6 +9,7 @@ import Categories from '../components/Categories';
 import Sort, { sortList } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import PizzaCartSkeleton from '../components/PizzaCartSkeleton';
+import {Status} from '../redux/slices/pizzasSlice'
 
 import { selectFilters, setCategoryInd, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 import { FetchPizzaArgsType, fetchPizzasAT, selectPizzas } from '../redux/slices/pizzasSlice';
@@ -25,9 +26,9 @@ const Home: React.FC = () => {
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
-  const onChangeCategory = (index: number) => {
+  const onChangeCategory = useCallback((index: number) => {
     dispatch(setCategoryInd(index));
-  };
+  }, [dispatch])
 
   const onChangePage = (number: number) => {
     dispatch(setCurrentPage(number));
@@ -96,7 +97,7 @@ const Home: React.FC = () => {
     <div className="container">
       <div className="content__top">
         <Categories value={categoryInd} onChangeCategories={onChangeCategory} />
-        <Sort />
+        <Sort value={sort}/>
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === 'error' ? (
@@ -105,7 +106,7 @@ const Home: React.FC = () => {
           <p>К сожалению, не удалось получить питсы. Попробуйте повторить попытку позже.</p>
         </div>
       ) : (
-        <div className="content__items">{status === 'loading' ? skeletons : pizzas}</div>
+        <div className="content__items">{status === Status.LOADING ? skeletons : pizzas}</div>
       )}
       <Paginate currentPage={currentPage} onChangePage={onChangePage} />
     </div>

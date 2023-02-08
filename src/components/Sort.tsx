@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectFilters, setSortType } from '../redux/slices/filterSlice'
+import { useDispatch } from 'react-redux';
+import { setSortType } from '../redux/slices/filterSlice'
+import { useWhyDidYouUpdate } from 'ahooks'
 
 export enum SortPropertyEnum {
   RATING_DESC = 'rating',
@@ -20,6 +21,10 @@ type M = MouseEvent & {
   path: Node[]
 }
 
+type SortPropsType = {
+  value: SortListType
+}
+
 export const sortList: SortListType[] = [
   {name: 'популярности (desc)', sortTypeProps: SortPropertyEnum.RATING_DESC},
   {name: 'популярности (asc)', sortTypeProps: SortPropertyEnum.RATING_ASC},
@@ -29,9 +34,9 @@ export const sortList: SortListType[] = [
   {name: 'алфавиту (asc)', sortTypeProps: SortPropertyEnum.NAME_ASC},
 ]
 
-const Sort: React.FC = () => {
+const Sort: React.FC<SortPropsType> = React.memo(( { value } ) => {
+  useWhyDidYouUpdate('Sort', {value})
   const dispatch = useDispatch()
-  const { sort } = useSelector(selectFilters)
 
   const [isVisible, setIsVisible] = useState(false)
   const sortRef = useRef<HTMLDivElement>(null)
@@ -74,14 +79,14 @@ const Sort: React.FC = () => {
         <b>Сортировка по:</b>
         <span
           onClick={() => setIsVisible(prev => !prev)}
-        >{sort.name}</span>
+        >{value.name}</span>
       </div>
       {isVisible && <div className="sort__popup">
         <ul>
           {sortList.map( (item, ind) => (
             <li
               key={`${item.name}_${ind}`}
-              className={item.sortTypeProps === sort.sortTypeProps ? 'active' : ''}
+              className={item.sortTypeProps === value.sortTypeProps ? 'active' : ''}
               onClick={() => handlerActiveItem(item)}
             >
               {item.name}
@@ -91,6 +96,6 @@ const Sort: React.FC = () => {
       </div>}
     </div>
   );
-}
+})
 
 export default Sort;

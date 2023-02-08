@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {useCallback} from 'react'
+import { useWhyDidYouUpdate } from 'ahooks'
 
 type categoriesPizzaType = string[]
 
@@ -16,11 +17,12 @@ const categoriesPizza: categoriesPizzaType = [
   'Закрытые'
 ]
 
-const Categories: React.FC<CategoriesPropsType> = ( {value, onChangeCategories} ) => {
-  const handlerActiveCategories = (index: number) => {
+const Categories: React.FC<CategoriesPropsType> = React.memo(( {value, onChangeCategories} ) => {
+  const handlerActiveCategories = useCallback((index: number) => {
     onChangeCategories(index)
-  }
+  }, [onChangeCategories])
 
+  useWhyDidYouUpdate('Categories', {value, onChangeCategories})
   return (
     <div className="categories">
       <ul>
@@ -36,6 +38,6 @@ const Categories: React.FC<CategoriesPropsType> = ( {value, onChangeCategories} 
       </ul>
     </div>
   )
-}
+})
 
 export default Categories
