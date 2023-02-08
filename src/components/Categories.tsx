@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import { useWhyDidYouUpdate } from 'ahooks'
+// import { useWhyDidYouUpdate } from 'ahooks'
 
 type categoriesPizzaType = string[]
 
@@ -22,7 +22,7 @@ const Categories: React.FC<CategoriesPropsType> = React.memo(( {value, onChangeC
     onChangeCategories(index)
   }, [onChangeCategories])
 
-  useWhyDidYouUpdate('Categories', {value, onChangeCategories})
+  // useWhyDidYouUpdate('Categories', {value, onChangeCategories})
   return (
     <div className="categories">
       <ul>

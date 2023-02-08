@@ -1,3 +1,6 @@
+import { getCartItemsFromLS } from './../../utils/getCartItemsFromLS';
+import { countTotalPrice } from './../../utils/countTotalPrice';
+import { countTotalPizzas } from './../../utils/countTotalPizzas';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store';
 
@@ -17,23 +20,14 @@ interface CartSliceState {
     items: CartSliceItemType[]
 }
 
+const cartData = getCartItemsFromLS()
+
 const initialState: CartSliceState = {
-  totalPrice: 0,
-  totalCountPizzas: 0,
-  items: []
+  totalPrice: countTotalPrice(cartData),
+  totalCountPizzas: countTotalPizzas(cartData),
+  items: cartData
 }
 
-const countTotalPrice = (items: CartSliceItemType[]) => {
-    return items.reduce((sum, obj) => {
-        return (obj.price * obj.count) + sum
-    }, 0)
-}
-
-const countTotalPizzas = (items: CartSliceItemType[]) => {
-    return items.reduce((sum, obj) => {
-        return obj.count + sum
-    }, 0)
-}
 
 export const cartSlice = createSlice({
   name: 'cart',

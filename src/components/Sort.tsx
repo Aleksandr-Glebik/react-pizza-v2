@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setSortType } from '../redux/slices/filterSlice'
-import { useWhyDidYouUpdate } from 'ahooks'
+// import { useWhyDidYouUpdate } from 'ahooks'
 
 export enum SortPropertyEnum {
   RATING_DESC = 'rating',
@@ -35,7 +35,7 @@ export const sortList: SortListType[] = [
 ]
 
 const Sort: React.FC<SortPropsType> = React.memo(( { value } ) => {
-  useWhyDidYouUpdate('Sort', {value})
+  // useWhyDidYouUpdate('Sort', {value})
   const dispatch = useDispatch()
 
   const [isVisible, setIsVisible] = useState(false)
