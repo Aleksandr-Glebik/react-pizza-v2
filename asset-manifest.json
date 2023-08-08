@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/react-pizza-v2/static/css/main.65025edc.css",
-    "main.js": "/react-pizza-v2/static/js/main.ce37a396.js",
-    "[Cart].js": "/react-pizza-v2/static/js/[Cart].578ebc67.chunk.js",
-    "[NotFound].css": "/react-pizza-v2/static/css/[NotFound].4b676dca.chunk.css",
-    "[NotFound].js": "/react-pizza-v2/static/js/[NotFound].69c5b7a4.chunk.js",
+    "main.js": "/react-pizza-v2/static/js/main.02bc73cd.js",
+    "[Cart].js": "/react-pizza-v2/static/js/[Cart].b2e4e4f2.chunk.js",
+    "[NotFound].css": "/react-pizza-v2/static/css/[NotFound].496dfc30.chunk.css",
+    "[NotFound].js": "/react-pizza-v2/static/js/[NotFound].86670f99.chunk.js",
     "[FullPizza].js": "/react-pizza-v2/static/js/[FullPizza].05c70f7f.chunk.js",
     "static/media/empty-cart.png": "/react-pizza-v2/static/media/empty-cart.db905d1f4b063162f25b.png",
     "static/media/pizza-logo.svg": "/react-pizza-v2/static/media/pizza-logo.56ac87032d8f6fdf863326acd06c0d97.svg",
     "index.html": "/react-pizza-v2/index.html",
     "main.65025edc.css.map": "/react-pizza-v2/static/css/main.65025edc.css.map",
-    "main.ce37a396.js.map": "/react-pizza-v2/static/js/main.ce37a396.js.map",
-    "[Cart].578ebc67.chunk.js.map": "/react-pizza-v2/static/js/[Cart].578ebc67.chunk.js.map",
-    "[NotFound].4b676dca.chunk.css.map": "/react-pizza-v2/static/css/[NotFound].4b676dca.chunk.css.map",
-    "[NotFound].69c5b7a4.chunk.js.map": "/react-pizza-v2/static/js/[NotFound].69c5b7a4.chunk.js.map",
+    "main.02bc73cd.js.map": "/react-pizza-v2/static/js/main.02bc73cd.js.map",
+    "[Cart].b2e4e4f2.chunk.js.map": "/react-pizza-v2/static/js/[Cart].b2e4e4f2.chunk.js.map",
+    "[NotFound].496dfc30.chunk.css.map": "/react-pizza-v2/static/css/[NotFound].496dfc30.chunk.css.map",
+    "[NotFound].86670f99.chunk.js.map": "/react-pizza-v2/static/js/[NotFound].86670f99.chunk.js.map",
     "[FullPizza].05c70f7f.chunk.js.map": "/react-pizza-v2/static/js/[FullPizza].05c70f7f.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.65025edc.css",
-    "static/js/main.ce37a396.js"
+    "static/js/main.02bc73cd.js"
   ]
 }
